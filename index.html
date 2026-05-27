@@ -352,7 +352,7 @@
     /* Chat panel */
     #chat-panel {
       position: absolute; bottom: 56px; right: 0;
-      width: 390px; height: 560px;
+      width: 460px; height: 680px;
       background: var(--white); border-radius: 18px;
       box-shadow: 0 12px 50px rgba(0,0,0,.18);
       display: flex; flex-direction: column; overflow: hidden;
@@ -414,7 +414,7 @@
       .hero-illustration { display: none; }
       .why-grid { grid-template-columns: 1fr; }
       .cards-grid { grid-template-columns: repeat(2, 1fr); }
-      #chat-panel { width: calc(100vw - 32px); right: -4px; height: 520px; }
+      #chat-panel { width: calc(100vw - 32px); right: -4px; height: 600px; }
       .auth-card { padding: 32px 24px; }
       .site-nav { display: none; }
     }
@@ -764,7 +764,7 @@
 ══════════════════════════════════════════════════════════ -->
 <script>
   /* ── Config ─────────────────────────────────────────────── */
-  const AMELIA_URL    = 'https://us.demo1.amelia.com/Amelia/ui/eubanking/chat?domain=eubanking&bpn_processName=trigger_form';
+  const AMELIA_URL    = 'https://us.demo1.amelia.com/Amelia/ui/eubanking/chat?domain=eubanking';
   const AMELIA_ORIGIN = 'https://us.demo1.amelia.com';
 
   /* ── State ──────────────────────────────────────────────── */
@@ -929,10 +929,12 @@
   // ② Send messages TO Amelia after successful auth
   function sendAuthSuccess(userName) {
     const frame = document.getElementById('amelia-frame');
-    if (!frame || !frame.contentWindow) return;
+    if (!frame || !frame.contentWindow) {
+      console.warn('[Nickel Demo] ❌ iframe introuvable ou contentWindow inaccessible');
+      return;
+    }
 
-    // Step 1: send conversation attributes (auth context)
-    frame.contentWindow.postMessage({
+    const attrs = {
       actionType: 'ameliaConversationAttributes',
       actionData: {
         authStatus:  'success',
@@ -941,14 +943,14 @@
         balance:     '1234.56',
         currency:    'EUR'
       }
-    }, AMELIA_ORIGIN);
+    };
+    console.log('[Nickel Demo] 📤 Envoi ameliaConversationAttributes →', attrs);
+    frame.contentWindow.postMessage(attrs, '*');
 
-    // Step 2: send user utterance to unblock the conversation flow
     setTimeout(() => {
-      frame.contentWindow.postMessage({
-        actionType: 'ameliaSay',
-        actionData: 'Authentification réussie'
-      }, AMELIA_ORIGIN);
+      const say = { actionType: 'ameliaSay', actionData: 'Authentification réussie' };
+      console.log('[Nickel Demo] 📤 Envoi ameliaSay →', say);
+      frame.contentWindow.postMessage(say, '*');
     }, 300);
   }
 
