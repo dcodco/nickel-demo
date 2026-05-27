@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nickel | Le compte pour tous</title>
+  <style>
+    /* ── Reset ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Helvetica Neue', Arial, sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; }
+    input  { font-family: inherit; }
+
+    /* ── Brand ──────────────────────────────────────────────── */
+    :root {
+      --orange:      #E8622A;
+      --orange-dk:   #c44e1e;
+      --navy:        #1a2332;
+      --navy-light:  #22304a;
+      --text:        #1a1a1a;
+      --muted:       #666;
+      --border:      #e0e0e0;
+      --gray:        #f5f5f5;
+      --white:       #ffffff;
+      --green:       #27ae60;
+      --red:         #e74c3c;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       SCREEN SYSTEM
+    ════════════════════════════════════════════════════════ */
+    .screen {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity .25s ease;
+    }
+    .screen.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       SHARED HEADER (home + dashboard)
+    ════════════════════════════════════════════════════════ */
+    .site-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .site-header-inner {
+      max-width: 1180px; margin: 0 auto; padding: 0 24px;
+      height: 68px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-wrap { display: flex; align-items: center; gap: 7px; }
+    .logo-coin {
+      width: 28px; height: 28px; background: var(--orange); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-coin svg { width: 14px; height: 14px; }
+    .logo-text { font-size: 19px; font-weight: 900; letter-spacing: 2px; color: var(--text); }
+    .site-nav { display: flex; gap: 26px; font-size: 14px; font-weight: 500; }
+    .site-nav a:hover { color: var(--orange); }
+    .header-btns { display: flex; gap: 10px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 9px 22px; border-radius: 50px; font-size: 14px; font-weight: 700;
+      transition: background .18s, color .18s, border-color .18s; border: 2px solid transparent;
+    }
+    .btn-outline { border-color: #bbb; color: var(--text); background: transparent; }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-solid { background: var(--orange); color: var(--white); border-color: var(--orange); }
+    .btn-solid:hover { background: var(--orange-dk); border-color: var(--orange-dk); }
+    .btn-lg { padding: 14px 36px; font-size: 16px; }
+
+    /* ════════════════════════════════════════════════════════
+       SCREEN 1 — HOME (nickel.eu/fr mock)
+    ════════════════════════════════════════════════════════ */
+
+    /* Hero */
+    .hero {
+      background: var(--navy);
+      color: var(--white);
+      padding: 60px 24px 70px;
+      display: flex; justify-content: center;
+    }
+    .hero-inner {
+      max-width: 1100px; width: 100%;
+      display: flex; align-items: center; gap: 40px;
+    }
+    .hero-illustration {
+      flex-shrink: 0; width: 240px; height: 260px;
+      background: var(--navy-light); border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    /* Illustrative orange card graphic */
+    .hero-card-mock {
+      width: 130px; height: 82px; background: var(--orange);
+      border-radius: 10px; box-shadow: 12px 14px 0 rgba(255,255,255,.08);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: 12px; position: relative;
+    }
+    .hero-card-chip {
+      width: 26px; height: 20px; background: rgba(255,255,255,.3); border-radius: 3px;
+    }
+    .hero-card-logo {
+      font-size: 10px; font-weight: 900; letter-spacing: 1.5px; color: rgba(255,255,255,.9);
+      text-align: right;
+    }
+    .hero-person {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 80px; height: 130px;
+      background: linear-gradient(to bottom, var(--orange), #c44e1e);
+      border-radius: 40px 40px 0 0; opacity: .35;
+    }
+    .hero-text { flex: 1; }
+    .hero-eyebrow { font-size: 13px; color: rgba(255,255,255,.6); margin-bottom: 10px; font-weight: 600; letter-spacing: 1px; }
+    .hero-h1 { font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 8px; }
+    .hero-h1 span { color: var(--orange); display: block; }
+    .hero-sub { font-size: 16px; color: rgba(255,255,255,.75); margin-bottom: 28px; }
+    .hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* Why Nickel strip */
+    .why-strip {
+      background: var(--white); padding: 40px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .why-inner { max-width: 1100px; margin: 0 auto; }
+    .why-inner h2 { font-size: 22px; font-weight: 800; margin-bottom: 24px; }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .why-item { display: flex; gap: 14px; align-items: flex-start; }
+    .why-icon {
+      width: 42px; height: 42px; background: var(--gray);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .why-icon svg { width: 22px; height: 22px; color: var(--orange); }
+    .why-item-text p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+    .why-item-text strong { font-size: 14px; color: var(--text); }
+
+    /* Cards section */
+    .cards-section { background: var(--navy); padding: 56px 24px; color: var(--white); }
+    .cards-inner { max-width: 1100px; margin: 0 auto; }
+    .cards-inner h2 { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+    .cards-inner p { text-align: center; color: rgba(255,255,255,.7); margin-bottom: 32px; font-size: 15px; }
+    .cards-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .card-item {
+      background: var(--navy-light); border-radius: 14px; padding: 20px;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
+    }
+    .card-visual {
+      width: 100px; height: 64px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 900; letter-spacing: 1px; color: rgba(255,255,255,.8);
+    }
+    .card-visual.classic  { background: linear-gradient(135deg, #E8622A, #c44e1e); }
+    .card-visual.mynickel { background: linear-gradient(135deg, #6ee7e7, #3bbfbf); }
+    .card-visual.chrome   { background: linear-gradient(135deg, #555, #222); }
+    .card-visual.metal    { background: linear-gradient(135deg, #aaa, #666); }
+    .card-item h3 { font-size: 14px; font-weight: 800; }
+    .card-item .price { color: var(--orange); font-size: 13px; font-weight: 700; }
+    .card-item p { font-size: 12px; color: rgba(255,255,255,.6); }
+    .card-item .btn-sm {
+      padding: 7px 16px; border-radius: 50px; font-size: 12px; font-weight: 700;
+      border: 1.5px solid rgba(255,255,255,.3); color: var(--white); background: transparent;
+      cursor: pointer; transition: background .18s;
+    }
+    .card-item .btn-sm:hover { background: rgba(255,255,255,.1); }
+
+    /* Home footer */
+    .home-footer { background: var(--white); border-top: 1px solid var(--border); padding: 28px 24px; }
+    .home-footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .home-footer-links { display: flex; gap: 20px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+    .home-footer-links a:hover { color: var(--orange); }
+    .home-footer p { font-size: 12px; color: var(--muted); }
+
+    /* ════════════════════════════════════════════════════════
+       SCREENS 2 & 3 — LOGIN / PASSWORD
+    ════════════════════════════════════════════════════════ */
+    .auth-page {
+      flex: 1; background: var(--gray);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 24px;
+    }
+    .auth-card {
+      background: var(--white); border-radius: 16px; padding: 44px 40px;
+      width: 100%; max-width: 420px;
+      box-shadow: 0 4px 32px rgba(0,0,0,.07);
+    }
+    .auth-logo {
+      display: flex; align-items: center; gap: 7px;
+      justify-content: center; margin-bottom: 32px;
+    }
+    .auth-logo .logo-coin { width: 32px; height: 32px; }
+    .auth-logo .logo-coin svg { width: 16px; height: 16px; }
+    .auth-logo .logo-text { font-size: 22px; }
+    .auth-card h2 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .auth-card .auth-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+    .auth-email-display {
+      background: var(--gray); border-radius: 8px; padding: 10px 14px;
+      font-size: 14px; color: var(--text); margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .auth-email-display button {
+      background: none; border: none; font-size: 13px; color: var(--orange);
+      font-weight: 600;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .form-group input {
+      width: 100%; padding: 12px 14px; border: 2px solid var(--border);
+      border-radius: 10px; font-size: 15px; outline: none;
+      transition: border-color .18s;
+    }
+    .form-group input:focus { border-color: var(--orange); }
+    .form-group input::placeholder { color: #bbb; }
+    .auth-submit {
+      width: 100%; padding: 14px; border-radius: 50px; border: none;
+      background: var(--orange); color: var(--white); font-size: 16px; font-weight: 700;
+      margin-top: 8px; transition: background .18s;
+    }
+    .auth-submit:hover { background: var(--orange-dk); }
+    .auth-submit:disabled { background: #ccc; cursor: not-allowed; }
+    .auth-help { margin-top: 16px; text-align: center; font-size: 13px; color: var(--muted); }
+    .auth-help a { color: var(--orange); font-weight: 600; }
+    .auth-secure {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      margin-top: 24px; font-size: 12px; color: var(--muted);
+    }
+    .auth-secure svg { width: 14px; height: 14px; color: var(--green); }
+
+    /* ════════════════════════════════════════════════════════
+       SCREEN 4 — DASHBOARD
+    ════════════════════════════════════════════════════════ */
+    .dashboard-header {
+      background: var(--navy); color: var(--white);
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .dash-logo { display: flex; align-items: center; gap: 7px; }
+    .dash-logo .logo-coin { width: 26px; height: 26px; }
+    .dash-logo .logo-coin svg { width: 13px; height: 13px; }
+    .dash-logo .logo-text { font-size: 18px; color: var(--white); }
+    .dash-user { display: flex; align-items: center; gap: 12px; }
+    .dash-avatar {
+      width: 36px; height: 36px; background: var(--orange); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; color: var(--white);
+    }
+    .dash-user-name { font-size: 14px; font-weight: 600; }
+    .dash-logout {
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      color: var(--white); padding: 6px 14px; border-radius: 50px; font-size: 13px;
+      font-weight: 600; transition: background .18s;
+    }
+    .dash-logout:hover { background: rgba(255,255,255,.2); }
+
+    .dashboard-body { flex: 1; background: var(--gray); padding: 28px 24px; }
+    .dashboard-inner { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+    /* Balance card */
+    .balance-card {
+      background: linear-gradient(135deg, var(--orange), #c44e1e);
+      border-radius: 18px; padding: 28px 28px 24px;
+      color: var(--white); position: relative; overflow: hidden;
+    }
+    .balance-card::before {
+      content: ''; position: absolute; top: -30px; right: -30px;
+      width: 160px; height: 160px; background: rgba(255,255,255,.08); border-radius: 50%;
+    }
+    .balance-card::after {
+      content: ''; position: absolute; bottom: -50px; right: 60px;
+      width: 120px; height: 120px; background: rgba(255,255,255,.05); border-radius: 50%;
+    }
+    .balance-label { font-size: 13px; opacity: .85; margin-bottom: 6px; font-weight: 600; }
+    .balance-amount { font-size: 42px; font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; }
+    .balance-amount span { font-size: 22px; font-weight: 700; opacity: .8; }
+    .balance-iban { font-size: 12px; opacity: .7; font-family: monospace; letter-spacing: .5px; }
+    .balance-actions { display: flex; gap: 10px; margin-top: 18px; }
+    .balance-action-btn {
+      background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.3);
+      color: var(--white); padding: 8px 18px; border-radius: 50px; font-size: 13px;
+      font-weight: 700; transition: background .18s;
+    }
+    .balance-action-btn:hover { background: rgba(255,255,255,.28); }
+
+    /* Transactions */
+    .transactions-card { background: var(--white); border-radius: 16px; overflow: hidden; }
+    .transactions-header {
+      padding: 18px 20px 14px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .transactions-header h3 { font-size: 16px; font-weight: 800; }
+    .transactions-header a { font-size: 13px; color: var(--orange); font-weight: 600; }
+    .transaction-item {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px; border-bottom: 1px solid var(--gray);
+      transition: background .12s;
+    }
+    .transaction-item:last-child { border-bottom: none; }
+    .transaction-item:hover { background: var(--gray); }
+    .tx-icon {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--gray);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 18px;
+    }
+    .tx-info { flex: 1; }
+    .tx-label { font-size: 14px; font-weight: 700; color: var(--text); }
+    .tx-meta  { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .tx-amount { font-size: 15px; font-weight: 800; }
+    .tx-amount.credit { color: var(--green); }
+    .tx-amount.debit  { color: var(--text); }
+
+    /* Quick info strip */
+    .info-strip {
+      background: var(--white); border-radius: 14px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 10px;
+      border-left: 4px solid var(--orange);
+      font-size: 14px; color: var(--muted);
+    }
+    .info-strip svg { width: 18px; height: 18px; color: var(--orange); flex-shrink: 0; }
+
+    /* ════════════════════════════════════════════════════════
+       CHAT WIDGET  (persistent overlay)
+    ════════════════════════════════════════════════════════ */
+    #chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 1000; }
+
+    /* Toggle button */
+    #chat-toggle {
+      background: var(--orange); color: var(--white);
+      border: none; border-radius: 50px; padding: 12px 20px 12px 16px;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 18px rgba(232,98,42,.45);
+      transition: background .18s, transform .18s;
+    }
+    #chat-toggle:hover { background: var(--orange-dk); transform: scale(1.04); }
+    #chat-toggle svg { width: 18px; height: 18px; }
+
+    /* Badge (notification dot) */
+    #chat-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 14px; height: 14px; background: #e74c3c; border-radius: 50%;
+      border: 2px solid var(--white);
+      display: none;
+    }
+    #chat-badge.visible { display: block; }
+
+    /* Chat panel */
+    #chat-panel {
+      position: absolute; bottom: 56px; right: 0;
+      width: 390px; height: 560px;
+      background: var(--white); border-radius: 18px;
+      box-shadow: 0 12px 50px rgba(0,0,0,.18);
+      display: flex; flex-direction: column; overflow: hidden;
+      transform: scale(.92) translateY(12px);
+      opacity: 0; pointer-events: none;
+      transition: transform .22s ease, opacity .22s ease;
+      transform-origin: bottom right;
+    }
+    #chat-panel.open {
+      transform: scale(1) translateY(0);
+      opacity: 1; pointer-events: all;
+    }
+
+    /* Chat panel header */
+    .chat-header {
+      background: #fdf4ef; border-bottom: 1px solid #f0e0d6;
+      padding: 12px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+    }
+    .chat-av {
+      width: 38px; height: 38px; border-radius: 50%; background: var(--orange);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .chat-av svg { width: 20px; height: 20px; }
+    .chat-name  { font-weight: 700; font-size: 14px; color: var(--text); }
+    .chat-sub   { font-size: 11px; color: var(--muted); }
+    .chat-hbtns { margin-left: auto; display: flex; gap: 4px; }
+    .chat-hbtn  {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(0,0,0,.06); border: none; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); transition: background .15s;
+    }
+    .chat-hbtn:hover { background: rgba(0,0,0,.12); color: var(--text); }
+
+    /* Chat iframe */
+    #amelia-frame {
+      flex: 1; width: 100%; border: none; display: block; background: var(--white);
+    }
+
+    /* Auth-in-progress overlay inside chat area */
+    #chat-auth-overlay {
+      position: absolute; inset: 0; background: rgba(255,255,255,.95);
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px;
+      border-radius: 18px;
+      text-align: center; padding: 24px;
+    }
+    #chat-auth-overlay.visible { display: flex; }
+    .auth-spinner {
+      width: 40px; height: 40px; border: 3px solid var(--border);
+      border-top-color: var(--orange); border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .auth-overlay-text { font-size: 14px; color: var(--muted); font-weight: 600; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      .hero-illustration { display: none; }
+      .why-grid { grid-template-columns: 1fr; }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      #chat-panel { width: calc(100vw - 32px); right: -4px; height: 520px; }
+      .auth-card { padding: 32px 24px; }
+      .site-nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════
+  SCREEN 1 — HOME  (nickel.eu/fr mock)
+══════════════════════════════════════════════════════════ -->
+<div id="screen-home" class="screen active">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="logo-wrap" href="#">
+        <div class="logo-coin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M8 15V9l8 6V9"/>
+          </svg>
+        </div>
+        <span class="logo-text">Ni<span style="color:var(--orange)">C</span>KE<span style="color:var(--orange)">L</span></span>
+      </a>
+      <nav class="site-nav">
+        <a href="#">Tarifs &amp; Services ▾</a>
+        <a href="#">Points de vente</a>
+        <a href="#">Nous connaître</a>
+      </nav>
+      <div class="header-btns">
+        <button class="btn btn-outline" onclick="goToLogin()">Espace client</button>
+        <button class="btn btn-solid">Ouvrir un compte</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-illustration">
+        <div class="hero-card-mock">
+          <div class="hero-card-chip"></div>
+          <div class="hero-card-logo">NiCKEL</div>
+        </div>
+        <div class="hero-person"></div>
+      </div>
+      <div class="hero-text">
+        <p class="hero-eyebrow">PLUS DE 5 MILLIONS DE COMPTES OUVERTS</p>
+        <h1 class="hero-h1">
+          1 COMPTE + 1 CARTE + 1 RIB
+          <span>EN 5 MINUTES</span>
+        </h1>
+        <p class="hero-sub">Avec plus de 5 millions de comptes ouverts</p>
+        <div class="hero-cta">
+          <button class="btn btn-solid btn-lg" onclick="goToLogin()">Ouvrir un compte en 5 min</button>
+          <button class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,.4);color:white;" onclick="goToLogin()">Espace client</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Nickel -->
+  <section class="why-strip">
+    <div class="why-inner">
+      <h2>Nickel c'est quoi&nbsp;?</h2>
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          </div>
+          <div class="why-item-text">
+            <strong>Ouvert à plus de 198 nationalités</strong>
+            <p>et <strong>sans condition de revenus</strong></p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          <div class="why-item-text">
+            <strong>Une carte Mastercard + un RIB français</strong>
+            <p>disponibles <strong>immédiatement</strong></p>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="why-item-text">
+            <strong>Plus de 8 000 Points Nickel / buralistes</strong>
+            <p>pour faciliter mon quotidien</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cards -->
+  <section class="cards-section">
+    <div class="cards-inner">
+      <h2>Pour tous les budgets,</h2>
+      <p>tous les besoins</p>
+      <div class="cards-grid">
+        <div class="card-item">
+          <div class="card-visual classic">NiCKEL</div>
+          <h3>Nickel Classic</h3>
+          <div class="price">25 € / an</div>
+          <p>La carte qu'on peut récupérer en 5 minutes en Point Nickel&nbsp;!</p>
+          <button class="btn-sm">En savoir plus</button>
+        </div>
+        <div class="card-item">
+          <div class="card-visual mynickel">NiCKEL</div>
+          <h3>My Nickel</h3>
+          <div class="price">25 € / an + 10 €</div>
+          <p>La carte qui vous ressemble</p>
+          <button class="btn-sm">En savoir plus</button>
+        </div>
+        <div class="card-item">
+          <div class="card-visual chrome">NiCKEL</div>
+          <h3>Nickel Chrome</h3>
+          <div class="price">55 € / an</div>
+          <p>La carte qui (vous) assure partout&nbsp;!</p>
+          <button class="btn-sm">En savoir plus</button>
+        </div>
+        <div class="card-item">
+          <div class="card-visual metal">NiCKEL</div>
+          <h3>Nickel Metal</h3>
+          <div class="price">105 € / an</div>
+          <p>La carte ultime</p>
+          <button class="btn-sm">En savoir plus</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="home-footer">
+    <div class="home-footer-inner">
+      <div class="home-footer-links">
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">FAQ</a>
+        <a href="#">Contactez-nous</a>
+      </div>
+      <p>© 2026 Nickel – Établissement de paiement agréé par la Banque de France</p>
+    </div>
+  </footer>
+
+</div><!-- /screen-home -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+  SCREEN 2 — LOGIN  (app.nickel.eu mock)
+══════════════════════════════════════════════════════════ -->
+<div id="screen-login" class="screen">
+  <div class="auth-page">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <div class="logo-coin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M8 15V9l8 6V9"/>
+          </svg>
+        </div>
+        <span class="logo-text">Ni<span style="color:var(--orange)">C</span>KE<span style="color:var(--orange)">L</span></span>
+      </div>
+
+      <h2>Connexion à votre espace client</h2>
+      <p class="auth-subtitle">Saisissez votre adresse e-mail ou numéro de téléphone</p>
+
+      <div class="form-group">
+        <label for="login-email">E-mail ou téléphone</label>
+        <input id="login-email" type="email" placeholder="exemple@email.com" autocomplete="email" />
+      </div>
+
+      <button class="auth-submit" id="login-btn" onclick="submitLogin()">Continuer</button>
+
+      <div class="auth-help">
+        Pas encore client&nbsp;? <a href="#">Ouvrir un compte</a>
+      </div>
+
+      <div class="auth-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Connexion sécurisée SSL
+      </div>
+    </div>
+  </div>
+</div><!-- /screen-login -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+  SCREEN 3 — PASSWORD  (app.nickel.eu/password mock)
+══════════════════════════════════════════════════════════ -->
+<div id="screen-password" class="screen">
+  <div class="auth-page">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <div class="logo-coin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M8 15V9l8 6V9"/>
+          </svg>
+        </div>
+        <span class="logo-text">Ni<span style="color:var(--orange)">C</span>KE<span style="color:var(--orange)">L</span></span>
+      </div>
+
+      <h2>Saisissez votre mot de passe</h2>
+      <p class="auth-subtitle">Pour accéder à votre espace client</p>
+
+      <div id="pw-email-display" class="auth-email-display">
+        <span id="pw-email-text">—</span>
+        <button onclick="showScreen('login')">Modifier</button>
+      </div>
+
+      <div class="form-group">
+        <label for="login-password">Mot de passe</label>
+        <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+
+      <button class="auth-submit" onclick="submitPassword()">Se connecter</button>
+
+      <div class="auth-help">
+        <a href="#">Mot de passe oublié&nbsp;?</a>
+      </div>
+
+      <div class="auth-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Connexion sécurisée SSL
+      </div>
+    </div>
+  </div>
+</div><!-- /screen-password -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+  SCREEN 4 — DASHBOARD  (espace client authentifié)
+══════════════════════════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+
+  <!-- Dashboard header -->
+  <header class="dashboard-header">
+    <div class="dash-logo">
+      <div class="logo-coin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M8 15V9l8 6V9"/>
+        </svg>
+      </div>
+      <span class="logo-text">Ni<span style="color:var(--orange)">C</span>KE<span style="color:var(--orange)">L</span></span>
+    </div>
+    <div class="dash-user">
+      <div class="dash-avatar" id="dash-avatar">JD</div>
+      <span class="dash-user-name" id="dash-username">Jean Dupont</span>
+      <button class="dash-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <!-- Dashboard body -->
+  <div class="dashboard-body">
+    <div class="dashboard-inner">
+
+      <!-- Balance card -->
+      <div class="balance-card">
+        <div class="balance-label">Solde disponible</div>
+        <div class="balance-amount">1&nbsp;234<span>,56 €</span></div>
+        <div class="balance-iban">FR76 1234 5678 9012 3456 7890 123</div>
+        <div class="balance-actions">
+          <button class="balance-action-btn">↑ Virement</button>
+          <button class="balance-action-btn">↓ Recharge</button>
+          <button class="balance-action-btn">⊕ Bloquer carte</button>
+        </div>
+      </div>
+
+      <!-- Info strip -->
+      <div class="info-strip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>Votre assistant Nickel est disponible en bas à droite pour répondre à toutes vos questions.</span>
+      </div>
+
+      <!-- Transactions -->
+      <div class="transactions-card">
+        <div class="transactions-header">
+          <h3>Dernières opérations</h3>
+          <a href="#">Voir tout</a>
+        </div>
+        <div id="transactions-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /screen-dashboard -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+  PERSISTENT CHAT WIDGET
+══════════════════════════════════════════════════════════ -->
+<div id="chat-widget">
+
+  <!-- Panel -->
+  <div id="chat-panel">
+    <div class="chat-header">
+      <div class="chat-av">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0118 0v6"/>
+          <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="chat-name">Assistant Nickel</div>
+        <div class="chat-sub">Powered by Amelia · SoundHound AI</div>
+      </div>
+      <div class="chat-hbtns">
+        <button class="chat-hbtn" onclick="closeChat()" title="Réduire">—</button>
+      </div>
+    </div>
+    <!-- Auth overlay (shown during login flow) -->
+    <div id="chat-auth-overlay">
+      <div class="auth-spinner"></div>
+      <p class="auth-overlay-text" id="auth-overlay-msg">Authentification en cours…</p>
+    </div>
+    <iframe
+      id="amelia-frame"
+      src=""
+      allow="microphone; camera"
+      allowfullscreen
+      title="Assistant virtuel Nickel – Amelia">
+    </iframe>
+  </div>
+
+  <!-- Toggle button -->
+  <button id="chat-toggle" onclick="toggleChat()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+    </svg>
+    Besoin d'aide
+  </button>
+  <div id="chat-badge"></div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+  JAVASCRIPT
+══════════════════════════════════════════════════════════ -->
+<script>
+  /* ── Config ─────────────────────────────────────────────── */
+  const AMELIA_URL    = 'https://us.demo1.amelia.com/Amelia/ui/eubanking/chat?domain=eubanking&bpn_processName=trigger_form';
+  const AMELIA_ORIGIN = 'https://us.demo1.amelia.com';
+
+  /* ── State ──────────────────────────────────────────────── */
+  let currentScreen  = 'home';
+  let chatOpen       = false;
+  let chatLoaded     = false;
+  let pendingEmail   = '';
+
+  /* ── Transactions mock data ─────────────────────────────── */
+  const TRANSACTIONS = [
+    { label: 'Carrefour City',   category: 'Courses',    amount: -45.20,   date: '26 mai 2026', icon: '🛒' },
+    { label: 'Virement reçu',    category: 'Virement',   amount: +500.00,  date: '25 mai 2026', icon: '↙️' },
+    { label: 'EDF',              category: 'Factures',   amount: -87.50,   date: '24 mai 2026', icon: '⚡' },
+    { label: 'Restaurant Léon',  category: 'Restaurant', amount: -32.00,   date: '23 mai 2026', icon: '🍽️' },
+    { label: 'Amazon',           category: 'Shopping',   amount: -19.99,   date: '22 mai 2026', icon: '📦' },
+    { label: 'Salaire mai',      category: 'Virement',   amount: +2100.00, date: '01 mai 2026', icon: '↙️' },
+  ];
+
+  /* ════════════════════════════════════════════════════════
+     SCREEN MANAGEMENT
+  ════════════════════════════════════════════════════════ */
+  function showScreen(name) {
+    const prev = document.querySelector('.screen.active');
+    const next = document.getElementById('screen-' + name);
+    if (!next || prev === next) return;
+
+    // Fade out
+    if (prev) {
+      prev.style.opacity = '0';
+      prev.style.transition = 'opacity .2s';
+    }
+    setTimeout(() => {
+      if (prev) prev.classList.remove('active');
+      next.classList.add('active');
+      // Force reflow then fade in
+      requestAnimationFrame(() => {
+        next.style.opacity = '0';
+        next.style.transition = 'opacity .25s';
+        requestAnimationFrame(() => { next.style.opacity = '1'; });
+      });
+      currentScreen = name;
+      updateChatState();
+    }, prev ? 200 : 0);
+  }
+
+  /* ════════════════════════════════════════════════════════
+     CHAT MANAGEMENT
+  ════════════════════════════════════════════════════════ */
+  function loadAmelia() {
+    if (!chatLoaded) {
+      document.getElementById('amelia-frame').src = AMELIA_URL;
+      chatLoaded = true;
+    }
+  }
+
+  function openChat() {
+    loadAmelia();
+    document.getElementById('chat-panel').classList.add('open');
+    chatOpen = true;
+    document.getElementById('chat-badge').classList.remove('visible');
+  }
+
+  function closeChat() {
+    document.getElementById('chat-panel').classList.remove('open');
+    chatOpen = false;
+  }
+
+  function toggleChat() {
+    chatOpen ? closeChat() : openChat();
+  }
+
+  // Show/hide chat widget based on screen
+  function updateChatState() {
+    const widget = document.getElementById('chat-widget');
+    if (currentScreen === 'login' || currentScreen === 'password') {
+      widget.style.display = 'none';
+    } else {
+      widget.style.display = 'block';
+    }
+  }
+
+  /* ════════════════════════════════════════════════════════
+     AUTH FLOW
+  ════════════════════════════════════════════════════════ */
+  function goToLogin() {
+    showScreen('login');
+  }
+
+  function submitLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    if (!email) {
+      document.getElementById('login-email').focus();
+      return;
+    }
+    pendingEmail = email;
+    document.getElementById('pw-email-text').textContent = email;
+    showScreen('password');
+  }
+
+  function submitPassword() {
+    const pw = document.getElementById('login-password').value;
+    if (!pw) {
+      document.getElementById('login-password').focus();
+      return;
+    }
+
+    // Update dashboard user info from email
+    const name = pendingEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const initials = name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+    document.getElementById('dash-username').textContent = name;
+    document.getElementById('dash-avatar').textContent   = initials;
+
+    // Render transactions
+    renderTransactions();
+
+    // Transition to dashboard
+    showScreen('dashboard');
+
+    // Reopen chat + send auth success to Amelia
+    setTimeout(() => {
+      openChat();
+      sendAuthSuccess(name);
+    }, 400);
+
+    // Clear password field for next demo run
+    document.getElementById('login-password').value = '';
+  }
+
+  function logout() {
+    showScreen('home');
+    closeChat();
+    document.getElementById('login-email').value = '';
+  }
+
+  /* ════════════════════════════════════════════════════════
+     AMELIA postMessage BRIDGE
+  ════════════════════════════════════════════════════════ */
+
+  // ① Receive messages FROM Amelia
+  window.addEventListener('message', function(e) {
+    if (e.origin !== AMELIA_ORIGIN) return;
+
+    const data = e.data;
+
+    // Amelia requests authentication
+    if (data.action === 'authenticate') {
+      handleAuthRequest(data.additionalData);
+    }
+  });
+
+  function handleAuthRequest(additionalData) {
+    // Show overlay in chat panel
+    setAuthOverlay(true, 'Connexion requise…');
+    // Short delay so user sees the chat reaction, then navigate to login
+    setTimeout(() => {
+      closeChat();
+      setAuthOverlay(false);
+      showScreen('login');
+    }, 900);
+  }
+
+  // ② Send messages TO Amelia after successful auth
+  function sendAuthSuccess(userName) {
+    const frame = document.getElementById('amelia-frame');
+    if (!frame || !frame.contentWindow) return;
+
+    // Step 1: send conversation attributes (auth context)
+    frame.contentWindow.postMessage({
+      actionType: 'ameliaConversationAttributes',
+      actionData: {
+        authStatus:  'success',
+        userName:    userName,
+        accountId:   'FR76123456789012345678901',
+        balance:     '1234.56',
+        currency:    'EUR'
+      }
+    }, AMELIA_ORIGIN);
+
+    // Step 2: send user utterance to unblock the conversation flow
+    setTimeout(() => {
+      frame.contentWindow.postMessage({
+        actionType: 'ameliaSay',
+        actionData: 'Authentification réussie'
+      }, AMELIA_ORIGIN);
+    }, 300);
+  }
+
+  function setAuthOverlay(visible, msg) {
+    const overlay = document.getElementById('chat-auth-overlay');
+    const msgEl   = document.getElementById('auth-overlay-msg');
+    if (msg) msgEl.textContent = msg;
+    overlay.classList.toggle('visible', visible);
+  }
+
+  /* ════════════════════════════════════════════════════════
+     DASHBOARD — RENDER TRANSACTIONS
+  ════════════════════════════════════════════════════════ */
+  function renderTransactions() {
+    const list = document.getElementById('transactions-list');
+    list.innerHTML = TRANSACTIONS.map(tx => {
+      const isCredit = tx.amount > 0;
+      const sign = isCredit ? '+' : '';
+      const amtClass = isCredit ? 'credit' : 'debit';
+      const formatted = sign + tx.amount.toFixed(2).replace('.', ',') + ' €';
+      return `
+        <div class="transaction-item">
+          <div class="tx-icon">${tx.icon}</div>
+          <div class="tx-info">
+            <div class="tx-label">${tx.label}</div>
+            <div class="tx-meta">${tx.category} · ${tx.date}</div>
+          </div>
+          <div class="tx-amount ${amtClass}">${formatted}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ════════════════════════════════════════════════════════
+     KEYBOARD SHORTCUTS (UX)
+  ════════════════════════════════════════════════════════ */
+  document.getElementById('login-email').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitLogin();
+  });
+  document.getElementById('login-password').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitPassword();
+  });
+
+  /* ════════════════════════════════════════════════════════
+     INIT
+  ════════════════════════════════════════════════════════ */
+  window.addEventListener('DOMContentLoaded', () => {
+    showScreen('home');
+    // Auto-open chat on home screen after a brief moment
+    setTimeout(() => {
+      openChat();
+    }, 800);
+  });
+</script>
+
+</body>
+</html>
