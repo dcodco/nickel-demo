@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nickel | Contact</title>
+  <style>
+    /* ── Reset & base ───────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Brand colours ──────────────────────────────────────── */
+    :root {
+      --orange:        #E8622A;
+      --orange-dark:   #c44e1e;
+      --orange-light:  #fdf1ec;
+      --gray-bg:       #f5f5f5;
+      --border:        #e0e0e0;
+      --text:          #1a1a1a;
+      --muted:         #666;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────── */
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* NiCKEL logo */
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .logo-wrap .coin {
+      width: 28px; height: 28px;
+      background: var(--orange);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .logo-wrap .coin svg { width: 16px; height: 16px; }
+    .logo-text { font-size: 20px; font-weight: 900; letter-spacing: 2px; }
+    .logo-text span { color: var(--orange); }
+
+    nav.main-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    nav.main-nav a { color: var(--text); }
+    nav.main-nav a:hover { color: var(--orange); }
+    .nav-chevron { font-size: 10px; margin-left: 2px; color: var(--muted); }
+
+    .header-cta { display: flex; gap: 10px; align-items: center; }
+    .btn {
+      display: inline-block;
+      padding: 9px 22px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .18s, color .18s;
+      border: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .btn-outline {
+      border-color: #bbb;
+      color: var(--text);
+      background: transparent;
+    }
+    .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+    .btn-solid {
+      background: var(--orange);
+      color: #fff;
+      border-color: var(--orange);
+    }
+    .btn-solid:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+
+    /* ── PAGE WRAP ──────────────────────────────────────────── */
+    .page-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── CLIENT TOGGLE (centered pills) ─────────────────────── */
+    .client-toggle-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 0 28px;
+    }
+    .client-toggle-wrap button {
+      padding: 12px 32px;
+      border-radius: 50px;
+      border: 2px solid #ccc;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      color: var(--text);
+      transition: all .18s;
+    }
+    .client-toggle-wrap button.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #fff;
+    }
+    .client-toggle-wrap button:hover:not(.active) {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    /* ── PANEL ──────────────────────────────────────────────── */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── SECTION HEADING ────────────────────────────────────── */
+    .contact-heading {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 24px;
+      color: var(--text);
+    }
+
+    /* ── ICON-CARD SUB-TABS ─────────────────────────────────── */
+    .icon-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: none;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+    .icon-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 148px;
+      padding: 18px 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      transition: border-color .18s, color .18s;
+      position: relative;
+      gap: 8px;
+    }
+    .icon-tab svg { width: 30px; height: 30px; color: #555; transition: color .18s; }
+    .icon-tab:hover:not(.active) { border-color: var(--orange); }
+    .icon-tab.active {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .icon-tab.active svg { color: var(--orange); }
+
+    /* downward triangle below active card */
+    .icon-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 12px solid var(--orange);
+      z-index: 2;
+    }
+    /* white cover to hide border behind triangle */
+    .icon-tab.active::before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 4px;
+      background: #fff;
+      z-index: 1;
+    }
+
+    /* ── TAB CONTENT AREA ───────────────────────────────────── */
+    .tab-content-area {
+      background: var(--gray-bg);
+      border-radius: 0 0 12px 12px;
+      padding: 32px 28px 28px;
+      margin-top: 14px;
+    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Centre d'aide */
+    .aide-links { list-style: none; }
+    .aide-links li { background: #fff; border-radius: 8px; margin-bottom: 8px; }
+    .aide-links a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text);
+      border-radius: 8px;
+      transition: color .15s;
+    }
+    .aide-links a:hover { color: var(--orange); }
+    .aide-links a::after { content: '›'; font-size: 20px; color: var(--orange); }
+    .aide-cta { margin-top: 20px; text-align: center; }
+    .aide-cta a {
+      display: inline-block;
+      padding: 12px 32px;
+      border-radius: 50px;
+      background: var(--orange);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      transition: background .18s;
+    }
+    .aide-cta a:hover { background: var(--orange-dark); }
+    .aide-cta-label {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 20px 0 12px;
+      color: var(--text);
+    }
+
+    /* Téléphone */
+    .phone-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 420px;
+    }
+    .phone-number { font-size: 28px; font-weight: 900; color: var(--orange); margin-bottom: 12px; letter-spacing: 1px; }
+    .phone-hours { display: grid; grid-template-columns: auto 1fr; gap: 4px 20px; font-size: 14px; margin-bottom: 16px; }
+    .phone-hours .day { font-weight: 700; }
+    .phone-hours .time { color: var(--muted); }
+    .phone-alert { background: #fff8e1; border-left: 4px solid #ffc107; border-radius: 4px; padding: 10px 14px; font-size: 13px; color: #856404; margin-bottom: 16px; }
+    .phone-card hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .phone-opposition { font-size: 13px; }
+    .phone-opposition strong { display: block; font-size: 18px; color: #e53e3e; margin: 4px 0; }
+    .phone-opposition small { color: var(--muted); }
+
+    /* Réseaux sociaux */
+    .social-intro { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+    .social-grid { display: flex; gap: 14px; flex-wrap: wrap; }
+    .social-card {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 24px;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-weight: 700; font-size: 15px;
+      transition: border-color .18s, color .18s;
+      min-width: 160px;
+    }
+    .social-card:hover { border-color: var(--orange); color: var(--orange); }
+    .social-icon { width: 26px; height: 26px; }
+
+    /* Courrier */
+    .courrier-wrap { background: #fff; border-radius: 12px; padding: 24px; max-width: 360px; }
+    .courrier-wrap address { font-style: normal; font-size: 16px; line-height: 1.8; margin-bottom: 20px; }
+    .link-reclamation { color: var(--orange); font-weight: 700; text-decoration: underline; }
+
+    /* ── Amelia iframe inline, edge-to-edge ────────────────── */
+    .tab-pane--flush {
+      /* cancel the padding/background of the parent tab-content-area */
+      margin: -32px -28px -28px;
+      border-radius: 0 0 12px 12px;
+      overflow: hidden;
+    }
+    .tab-pane--flush iframe {
+      display: block;
+      width: 100%;
+      height: 580px;
+      border: none;
+    }
+
+    /* "Pas encore client" panel */
+    .prospect-intro { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 24px; }
+    .prospect-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; }
+    .prospect-card { border: 2px solid var(--border); border-radius: 12px; padding: 20px; transition: border-color .18s; }
+    .prospect-card:hover { border-color: var(--orange); }
+    .prospect-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .prospect-card p { font-size: 13px; color: var(--muted); }
+
+    /* Facebook card for "pas encore client" */
+    .fb-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 120px; height: 120px; margin: 0 auto;
+      border: 2px solid var(--border); border-radius: 12px;
+      font-size: 13px; font-weight: 600; gap: 8px; color: var(--text);
+      transition: border-color .18s;
+    }
+    .fb-card:hover { border-color: var(--orange); }
+    .contact-heading-sub { text-align: center; font-size: 22px; font-weight: 800; margin-bottom: 24px; }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer { background: #fff; border-top: 1px solid var(--border); padding: 48px 24px 28px; margin-top: 60px; }
+    .footer-inner { max-width: 1180px; margin: 0 auto; }
+    .footer-logo {
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 900; font-size: 18px; letter-spacing: 2px;
+      margin-bottom: 28px;
+    }
+    .footer-logo .coin-sm {
+      width: 22px; height: 22px; background: var(--orange); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .footer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 24px; padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+    .footer-col h4 { font-size: 13px; font-weight: 800; margin-bottom: 10px; color: var(--text); }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 6px; }
+    .footer-col a { color: var(--muted); font-size: 13px; }
+    .footer-col a:hover { color: var(--orange); }
+    .footer-bottom { margin-top: 20px; font-size: 12px; color: #999; text-align: center; }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .header-inner { flex-wrap: wrap; height: auto; padding: 12px 16px; gap: 8px; }
+      nav.main-nav { display: none; }
+      .icon-tab { width: 100px; padding: 14px 8px 12px; font-size: 12px; }
+      .tab-pane--flush iframe { height: 460px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <!-- Logo: NiCKEL with orange coin -->
+    <a class="logo-wrap" href="#">
+      <div class="coin">
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/>
+          <path d="M5 11V5l6 6V5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span class="logo-text">Ni<span>C</span>KE<span>L</span></span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="#">Tarifs &amp; Services <span class="nav-chevron">▾</span></a>
+      <a href="#">Points de vente</a>
+      <a href="#">Nous connaître</a>
+    </nav>
+
+    <div class="header-cta">
+      <a href="#" class="btn btn-outline">Espace client</a>
+      <a href="#" class="btn btn-solid">Ouvrir un compte</a>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE -->
+<div class="page-wrap">
+
+  <!-- ── CENTERED PILL TOGGLES ─────────────────────────────── -->
+  <div class="client-toggle-wrap">
+    <button id="btn-prospect" onclick="switchClient('prospect')" class="active">Pas encore client&nbsp;?</button>
+    <button id="btn-existing" onclick="switchClient('existing')">Déjà client&nbsp;?</button>
+  </div>
+
+  <!-- ══ PANEL: Pas encore client ══════════════════════════════ -->
+  <div class="panel active" id="panel-prospect">
+    <p class="contact-heading-sub">Contacter le service client</p>
+    <div style="text-align:center;margin-top:12px">
+      <a class="fb-card" href="https://www.facebook.com/NickelFr/" target="_blank">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="#1877F2">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+        Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: Déjà client ═════════════════════════════════════ -->
+  <div class="panel" id="panel-existing">
+
+    <p class="contact-heading">Contacter le service client</p>
+
+    <!-- Icon-card sub-tabs -->
+    <div class="icon-tabs">
+
+      <button class="icon-tab" id="itab-aide" onclick="switchTab('aide')">
+        <!-- checkmark / help icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        Centre d'aide
+      </button>
+
+      <button class="icon-tab" id="itab-contact" onclick="switchTab('contact')">
+        <!-- chat / message icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+        </svg>
+        Contact
+      </button>
+
+      <button class="icon-tab" id="itab-tel" onclick="switchTab('tel')">
+        <!-- headset icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 18v-6a9 9 0 0118 0v6"/>
+          <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/>
+        </svg>
+        Téléphone
+      </button>
+
+      <button class="icon-tab" id="itab-social" onclick="switchTab('social')">
+        <!-- share / social icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        Réseaux sociaux
+      </button>
+
+      <button class="icon-tab" id="itab-courrier" onclick="switchTab('courrier')">
+        <!-- mail icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Courrier
+      </button>
+
+    </div><!-- /icon-tabs -->
+
+    <!-- Tab content area -->
+    <div class="tab-content-area">
+
+      <!-- Centre d'aide -->
+      <div class="tab-pane" id="tab-aide">
+        <ul class="aide-links">
+          <li><a href="#">Comment accéder à mon espace client&nbsp;?</a></li>
+          <li><a href="#">Comment modifier mes informations personnelles&nbsp;?</a></li>
+          <li><a href="#">Comment confirmer mon adresse postale&nbsp;?</a></li>
+          <li><a href="#">Comment faire une réclamation&nbsp;?</a></li>
+        </ul>
+        <p class="aide-cta-label">Vous n'avez pas trouvé réponse à votre question&nbsp;?</p>
+        <div class="aide-cta"><a href="#">Accès au Centre d'Aide</a></div>
+      </div>
+
+      <!-- Contact → Amelia iframe, edge-to-edge, no decoration -->
+      <div class="tab-pane tab-pane--flush" id="tab-contact">
+        <iframe
+          src="https://us.demo1.amelia.com/Amelia/ui/eubanking/chat?domain=eubanking&bpn_processName=trigger_form"
+          allow="microphone; camera"
+          allowfullscreen
+          title="Assistant virtuel Nickel – Amelia"
+          loading="lazy">
+        </iframe>
+      </div>
+
+      <!-- Téléphone -->
+      <div class="tab-pane" id="tab-tel">
+        <div class="phone-card">
+          <div class="phone-number">01 76 49 00 00</div>
+          <div class="phone-hours">
+            <span class="day">Lundi – Vendredi</span><span class="time">8 h 30 – 19 h</span>
+            <span class="day">Samedi</span><span class="time">9 h – 18 h</span>
+          </div>
+          <div class="phone-alert">
+            Les jours de versements des prestations sociales (CAF et Pôle Emploi) l'affluence reste forte au cours de la journée.
+          </div>
+          <hr/>
+          <div class="phone-opposition">
+            Carte perdue ou volée&nbsp;? Faire opposition
+            <strong>01 76 49 48 10</strong>
+            <small>Coût d'un appel local selon opérateurs</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Réseaux sociaux -->
+      <div class="tab-pane" id="tab-social">
+        <p class="social-intro">Nos community managers vous répondent sur les réseaux sociaux&nbsp;:</p>
+        <div class="social-grid">
+          <a class="social-card" href="https://www.facebook.com/NickelFr/" target="_blank">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="#1877F2">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </a>
+          <a class="social-card" href="https://www.instagram.com/nickelfrance/" target="_blank">
+            <svg class="social-icon" viewBox="0 0 24 24">
+              <defs>
+                <linearGradient id="ig" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#f09433"/>
+                  <stop offset="50%" stop-color="#dc2743"/>
+                  <stop offset="100%" stop-color="#bc1888"/>
+                </linearGradient>
+              </defs>
+              <path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            Instagram
+          </a>
+        </div>
+      </div>
+
+      <!-- Courrier -->
+      <div class="tab-pane" id="tab-courrier">
+        <div class="courrier-wrap">
+          <address>
+            Nickel<br/>
+            TSA 50501<br/>
+            44205 Nantes CEDEX 2
+          </address>
+          <a href="#" class="link-reclamation">Réclamation</a>
+        </div>
+      </div>
+
+    </div><!-- /tab-content-area -->
+  </div><!-- /panel-existing -->
+
+</div><!-- /page-wrap -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="coin-sm">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" stroke="white" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <span>Ni<span style="color:var(--orange)">C</span>KE<span style="color:var(--orange)">L</span></span>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>A PROPOS</h4>
+        <ul>
+          <li><a href="#">Qui sommes-nous ?</a></li>
+          <li><a href="#">Mag' Nickel</a></li>
+          <li><a href="#">Partenaires et Social</a></li>
+          <li><a href="#">Presse</a></li>
+          <li><a href="#">Recrutement</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>AIDE</h4>
+        <ul>
+          <li><a href="#">Comment ouvrir un compte ?</a></li>
+          <li><a href="#">Fiches pratiques</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contactez-nous</a></li>
+          <li><a href="#">Mentions légales</a></li>
+          <li><a href="#">Sécurité</a></li>
+          <li><a href="#">Résiliation de compte</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>NOS CARTES</h4>
+        <ul>
+          <li><a href="#">Carte Nickel</a></li>
+          <li><a href="#">Carte My Nickel</a></li>
+          <li><a href="#">Nickel Chrome</a></li>
+          <li><a href="#">Nickel Metal</a></li>
+          <li><a href="#">Carte Jeune</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SUIVEZ-NOUS</h4>
+        <ul>
+          <li><a href="https://www.facebook.com/NickelFr/" target="_blank">Facebook</a></li>
+          <li><a href="https://www.instagram.com/nickelfrance/" target="_blank">Instagram</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Nickel c'est le compte pour tous ! · 25€/an · Disponible en bureau de tabac</p>
+      <p style="margin-top:4px">© 2026 Nickel – Etablissement de paiement agréé par la Banque de France</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Client panel toggle ────────────────────────────────────
+  function switchClient(which) {
+    document.getElementById('panel-prospect').classList.toggle('active', which === 'prospect');
+    document.getElementById('panel-existing').classList.toggle('active', which === 'existing');
+    document.getElementById('btn-prospect').classList.toggle('active', which === 'prospect');
+    document.getElementById('btn-existing').classList.toggle('active', which === 'existing');
+  }
+
+  // ── Icon-card sub-tab switcher ─────────────────────────────
+  const TABS = ['aide', 'contact', 'tel', 'social', 'courrier'];
+
+  function switchTab(id) {
+    TABS.forEach(t => {
+      document.getElementById('tab-' + t)?.classList.toggle('active', t === id);
+      document.getElementById('itab-' + t)?.classList.toggle('active', t === id);
+    });
+  }
+
+  // On load: "Pas encore client" + "Centre d'aide" by default
+  window.addEventListener('DOMContentLoaded', () => {
+    switchClient('prospect');
+    switchTab('aide');
+  });
+</script>
+</body>
+</html>
