@@ -678,16 +678,28 @@
   <div class="dashboard-body">
     <div class="dashboard-inner">
 
-      <!-- Balance card -->
-      <div class="balance-card">
-        <div class="balance-label">Solde disponible</div>
-        <div class="balance-amount">1&nbsp;234<span>,56 €</span></div>
-        <div class="balance-iban">FR76 1234 5678 9012 3456 7890 123</div>
-        <div class="balance-actions">
-          <button class="balance-action-btn">↑ Virement</button>
-          <button class="balance-action-btn">↓ Recharge</button>
-          <button class="balance-action-btn">⊕ Bloquer carte</button>
+      <!-- Account cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+        <div class="balance-card">
+          <div class="balance-label">Compte courant</div>
+          <div class="balance-amount">378<span>,87 €</span></div>
+          <div class="balance-iban">N° 1757416501</div>
+          <div class="balance-actions">
+            <button class="balance-action-btn">↑ Virement</button>
+            <button class="balance-action-btn">⊕ Bloquer carte</button>
+          </div>
         </div>
+
+        <div class="balance-card" style="background:linear-gradient(135deg,#2c7be5,#1a5cbf);">
+          <div class="balance-label">Livret d'épargne</div>
+          <div class="balance-amount">1&nbsp;678<span>,24 €</span></div>
+          <div class="balance-iban">N° 1757416499</div>
+          <div class="balance-actions">
+            <button class="balance-action-btn">↑ Virer vers courant</button>
+          </div>
+        </div>
+
       </div>
 
       <!-- Info strip -->
@@ -699,7 +711,7 @@
       <!-- Transactions -->
       <div class="transactions-card">
         <div class="transactions-header">
-          <h3>Dernières opérations</h3>
+          <h3>Dernières opérations — Compte courant</h3>
           <a href="#">Voir tout</a>
         </div>
         <div id="transactions-list"></div>
@@ -775,12 +787,9 @@
 
   /* ── Transactions mock data ─────────────────────────────── */
   const TRANSACTIONS = [
-    { label: 'Carrefour City',   category: 'Courses',    amount: -45.20,   date: '26 mai 2026', icon: '🛒' },
-    { label: 'Virement reçu',    category: 'Virement',   amount: +500.00,  date: '25 mai 2026', icon: '↙️' },
-    { label: 'EDF',              category: 'Factures',   amount: -87.50,   date: '24 mai 2026', icon: '⚡' },
-    { label: 'Restaurant Léon',  category: 'Restaurant', amount: -32.00,   date: '23 mai 2026', icon: '🍽️' },
-    { label: 'Amazon',           category: 'Shopping',   amount: -19.99,   date: '22 mai 2026', icon: '📦' },
-    { label: 'Salaire mai',      category: 'Virement',   amount: +2100.00, date: '01 mai 2026', icon: '↙️' },
+    { label: 'Decathlon',  category: 'Sport',       amount: -73.52, date: '20 mai 2026', icon: '🏃' },
+    { label: 'Netflix',    category: 'Abonnement',  amount: -29.99, date: '20 mai 2026', icon: '🎬' },
+    { label: 'Carrefour',  category: 'Courses',     amount: -45.50, date: '20 mai 2026', icon: '🛒' },
   ];
 
   /* ════════════════════════════════════════════════════════
